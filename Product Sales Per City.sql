@@ -1,22 +1,20 @@
 SELECT 
-    CI.city_name, 
-    PR.product_name, 
-    ROUND(SUM(INV_I.line_total_price), 2) AS total
+    ci.city_name, 
+    pr.product_name, 
+    ROUND(SUM(ii.line_total_price), 2) AS total
 FROM 
-    city as CI, 
-    customer as CU, 
-    invoice as INV, 
-    invoice_item as INV_I, 
-    product as PR 
-WHERE 
-    CI.id = CU.city_id
-    AND CU.id = INV.customer_id 
-    AND INV.id = INV_I.invoice_id 
-    AND INV_I.product_id = PR.id 
+    city ci
+JOIN 
+    customer cu ON ci.id = cu.city_id
+JOIN 
+    invoice i ON cu.id = i.customer_id
+JOIN 
+    invoice_item ii ON i.id = ii.invoice_id
+JOIN 
+    product pr ON ii.product_id = pr.id
 GROUP BY 
-    CI.city_name, 
-    PR.product_name 
+    ci.city_name, pr.product_name
 ORDER BY 
     total DESC, 
-    CI.city_name, 
-    PR.product_name ;
+    ci.city_name, 
+    pr.product_name;
